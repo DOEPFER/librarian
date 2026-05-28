@@ -1,3 +1,10 @@
+"""
+Summarizer Agent configuration module.
+
+This module initializes the Summarizer agent responsible for generating
+a file name, a summary, and a list of tags for a given document using an LLM.
+"""
+
 from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat

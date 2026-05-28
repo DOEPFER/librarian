@@ -1,3 +1,12 @@
+"""
+Workflow pipeline definition for the Librarian project.
+
+This module defines the Directed Acyclic Graph (DAG) for the document processing
+workflow. It outlines the sequence of steps, from indexing and sampling to
+summarization, similarity checking, librarian analysis, and finally moving
+the document to its designated shelf.
+"""
+
 from agno.workflow import Condition,Step, Workflow
 
 from librarian.steps.index import update_index

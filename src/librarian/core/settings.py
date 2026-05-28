@@ -1,3 +1,10 @@
+"""
+Configuration settings for the Librarian project.
+
+Loads environment variables and initializes core configuration variables,
+such as paths to the library, system folders, index files, and API keys.
+"""
+
 from pathlib import Path
 
 import os

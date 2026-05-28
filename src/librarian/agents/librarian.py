@@ -1,3 +1,10 @@
+"""
+Librarian Agent configuration module.
+
+This module initializes the Librarian agent responsible for determining the
+appropriate logical storage path (shelf) for a document based on its content.
+"""
+
 from agno.agent import Agent
 from agno.models.ollama import Ollama
 from agno.models.openai import OpenAIChat

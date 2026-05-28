@@ -1,3 +1,10 @@
+"""
+Semantic similarity step for the workflow.
+
+This module evaluates the semantic similarity of a new document against
+the existing library index to suggest an appropriate shelf path.
+"""
+
 from pathlib import Path
 import json
 
@@ -12,6 +19,19 @@ from librarian.core.settings import library_index_file
 
 
 def semantic_similarity(step_input: StepInput) -> StepOutput:
+    """
+    Computes semantic similarity to find an appropriate shelf for a document.
+
+    Generates an embedding based on the document's tags and summary, compares it
+    against the existing library index, and determines if there is a match above
+    a predefined similarity threshold (0.75).
+
+    Args:
+        step_input (StepInput): The workflow step input containing the previous step's output (tags and summary).
+
+    Returns:
+        StepOutput: The result containing the generated embedding and, if a match is found, the suggested shelf path.
+    """
     
     threshold = 0.75
 

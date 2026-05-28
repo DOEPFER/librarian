@@ -1,3 +1,11 @@
+"""
+Final step for moving and indexing documents.
+
+This module provides functionalities to move the processed document
+to its designated shelf in the library and update the library index
+with its vector embedding.
+"""
+
 from pathlib import Path
 import json
 
@@ -7,6 +15,13 @@ from librarian.core.settings import library_path, library_index_file
 
 
 def update_library_index(file_shelf: Path, embedding: str) -> None:
+    """
+    Updates the library index file with the document's vector embedding.
+
+    Args:
+        file_shelf (Path): The relative path of the file within the library.
+        embedding (str): The vector embedding representing the document's content.
+    """
 
     with open(library_index_file, 'r', encoding='utf-8') as file:
         library = json.load(file)
@@ -19,6 +34,19 @@ def update_library_index(file_shelf: Path, embedding: str) -> None:
     return
 
 def send_to_shelf(step_input: StepInput) -> StepOutput:
+    """
+    Moves the processed file to the target shelf and updates the library index.
+
+    Retrieves the designated shelf path from either the semantic similarity step
+    or the librarian analysis step. It then copies the file to the new location
+    with the generated file name and updates the index with the document's embedding.
+
+    Args:
+        step_input (StepInput): The workflow step input containing outputs from previous steps.
+
+    Returns:
+        StepOutput: The result of the step execution, indicating success or failure.
+    """
     
     src = step_input.input['file_path']
     

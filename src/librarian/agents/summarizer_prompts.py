@@ -1,3 +1,10 @@
+"""
+Prompts for the Summarizer Agent.
+
+This module defines the system prompts (description and instructions) used by the
+LLM to generate a file name, a summary, and a list of tags for a given document.
+"""
+
 DESCRIPTION = '''
 Você é um redator/resumista que atua na catalogação de arquivos (documentos/livros). Sua função é criar um nome para o arquivo, gerar um resumo e criar uma lista de tags, tudo baseado no assunto/tema/subtema/tópico do conteúdo.
 '''

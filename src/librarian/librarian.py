@@ -1,3 +1,10 @@
+"""
+Main entry point for the Librarian application.
+
+This script initializes the document processing workflow by calling
+the execution module with a specified collection path.
+"""
+
 # import sys
 
 from pathlib import Path
