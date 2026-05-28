@@ -5,27 +5,24 @@ from agno.workflow import StepInput, StepOutput
 
 def sample_file(step_input: StepInput) -> StepOutput:
 
-    # library_shelves = step_input.input['library_shelves']
     file_path = step_input.input['file_path']
-    # file_extension = file_path.suffix.lower()
     
-    max_pages = 5
-
-    # print('@'*50)
-    # print(file_path)
-    # print(step_input.input['library_path'])
-    # print('@'*50)
+    max_pages = 7
 
     try:
         with open(file_path, 'rb') as file:
             pdf = PdfReader(file)
 
-            metadata = pdf.metadata        
-            metadata = {
-                'title': metadata.title if metadata.title is not None else '',
-                'author': metadata.author if metadata.author is not None else '',
-                'subject': metadata.subject if metadata.subject is not None else ''
-            }
+            # metadata
+            metadata = pdf.metadata
+            if metadata is None:
+                metadata = {'title': '', 'author': '', 'subject': ''}
+            else:       
+                metadata = {
+                    'title': metadata.title if metadata.title is not None else '',
+                    'author': metadata.author if metadata.author is not None else '',
+                    'subject': metadata.subject if metadata.subject is not None else ''
+                }
 
             # metadata_xmp = pdf.xmp_metadata
             # metadata_xmp = {
@@ -37,7 +34,8 @@ def sample_file(step_input: StepInput) -> StepOutput:
             total_pages = len(pdf.pages)
 
             max_pages = min(max_pages, total_pages)
-
+            
+            # sample
             sample = ''
             for i in range(max_pages):
                 page = pdf.pages[i]
@@ -45,5 +43,4 @@ def sample_file(step_input: StepInput) -> StepOutput:
     except Exception:
         return StepOutput(content='', success=False)
     else:
-        # return StepOutput(content={'metadata': metadata, 'sample': sample, 'library_shelves': library_shelves}, success=True)
         return StepOutput(content={'metadata': metadata, 'sample': sample}, success=True)

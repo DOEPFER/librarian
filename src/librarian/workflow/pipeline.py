@@ -1,12 +1,12 @@
 from agno.workflow import Condition,Step, Workflow
 
+from librarian.steps.index import update_index
 from librarian.steps.sample import sample_file
 from librarian.agents.summarizer import summarizer
 from librarian.steps.similarity import semantic_similarity
 from librarian.steps.prepare_data_librarian import prepare_data
 from librarian.agents.librarian import librarian
 from librarian.steps.send import send_to_shelf
-from librarian.steps.index import update_index
 
 
 # STEPS

@@ -3,6 +3,8 @@ from typing import List
 import hashlib
 from pathlib import Path
 
+from librarian.core.settings import library_path
+
 
 def checksum(file: Path) -> str:
     md5_hash = hashlib.md5()
@@ -11,15 +13,15 @@ def checksum(file: Path) -> str:
             md5_hash.update(chunk)
     return md5_hash.hexdigest()
 
-def select_collection(collection: Path, library: Path) -> List[Path]:
+def select_collection(collection_path: Path) -> List[Path]:
 
-    content_library = library.glob(pattern='**/*')
+    content_library = library_path.glob(pattern='**/*')
     content_library = [checksum(content) for content in content_library if content.is_file()]
 
-    if collection.is_file():
-        content_collection = [collection] if checksum(collection) not in content_library else []
+    if collection_path.is_file():
+        content_collection = [collection_path] if checksum(collection_path) not in content_library else []
     else:
-        content_collection = collection.glob(pattern='**/*')
+        content_collection = collection_path.glob(pattern='**/*')
         content_collection = {checksum(content): content for content in content_collection if content.is_file()}
         content_collection = [path for checksum, path in content_collection.items() if checksum not in content_library]
 

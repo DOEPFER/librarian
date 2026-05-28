@@ -27,10 +27,3 @@ INSTRUCTIONS = '''
 - **Exemplo:**
     - "summary": "Este guia aborda os fundamentos da programação Python aplicados ao mercado financeiro. Apresenta bibliotecas essenciais como Pandas e NumPy para análise de dados e backtesting de estratégias de investimento. É um recurso prático e introdutório para analistas."
 '''
-
-# [EXEMPLO DE SAÍDA ESPERADA]
-# {
-#     "name": "python-para-financas-johnson-2ed",
-#     "tags": ["python", "finanças", "pandas", "backtesting", "investimento"],
-#     "summary": Este guia aborda os fundamentos da programação Python aplicados ao mercado financeiro. Apresenta bibliotecas essenciais como Pandas e NumPy para análise de dados e backtesting de estratégias de investimento. É um recurso prático e introdutório para analistas."
-# }
