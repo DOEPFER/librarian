@@ -1,0 +1,14 @@
+[global]
+project_name = 'librarian'
+version = '0.2.0'
+
+[settings]
+sys_folder_name = '.sys'
+library_index_file_name = 'library.json'
+shelves_index_file_name = 'shelves.json'
+library_path='/home/rafael-doepfer/Documents/librarian_test/library'
+embedding_model_id = 'embeddinggemma'
+similarity_threshold = 0.75
+
+[reader]
+sample_pages = 7

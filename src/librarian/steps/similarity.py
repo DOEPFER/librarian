@@ -13,9 +13,9 @@ import numpy as np
 from agno.workflow import StepInput, StepOutput
 
 from librarian.utils.embedding import generate_vector
-from librarian.utils.similarity import similarity
+from librarian.utils.cosine_similarity import similarity
 
-from librarian.core.settings import library_index_file
+from librarian.core.settings import library_index_file, shelves_index_file, similarity_threshold
 
 
 def semantic_similarity(step_input: StepInput) -> StepOutput:
@@ -24,7 +24,7 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
 
     Generates an embedding based on the document's tags and summary, compares it
     against the existing library index, and determines if there is a match above
-    a predefined similarity threshold (0.75).
+    a predefined similarity threshold.
 
     Args:
         step_input (StepInput): The workflow step input containing the previous step's output (tags and summary).
@@ -32,15 +32,12 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     Returns:
         StepOutput: The result containing the generated embedding and, if a match is found, the suggested shelf path.
     """
-    
-    threshold = 0.75
 
-    # name = step_input.previous_step_content.name
     tags = step_input.previous_step_content.tags
     summary = step_input.previous_step_content.summary
 
-    content = f'<tags>{tags}</tags><summary>{summary}</summary>'
-    embedding = generate_vector(prompt=content)
+    doc_str_embedding = f'<tags>{tags}</tags><summary>{summary}</summary>'
+    doc_embedding = generate_vector(prompt=doc_str_embedding)
 
     with open(library_index_file, 'r', encoding='utf-8') as file:
         _library = json.load(file)
@@ -48,13 +45,28 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     similar = ('', 0)   
     for key, value in _library.items():
 
-        similarity_value = similarity(np.array(value), np.array(embedding))
-        if similarity_value >= threshold and similarity_value > similar[1]:
+        similarity_value = similarity(np.array(value), np.array(doc_embedding))
+        if similarity_value >= similarity_threshold and similarity_value > similar[1]:
             similar = (key, similarity_value)
     
-    embedding = embedding.tolist()
+    doc_embedding = doc_embedding.tolist()
+
+    # --------------------------------------------------------------------------
+    # tags_str_embedding = str(Path(*tags))
+    # tags_embedding = generate_vector(prompt=tags_str_embedding)
+
+    # with open(shelves_index_file, 'r', encoding='utf-8') as file:
+    #     _shelves = json.load(file)
+    
+    # similar_shelf = ('', 0)   
+    # for key, value in _shelves.items():
+
+    #     similarity_value = similarity(np.array(value), np.array(tags_embedding))
+    #     if similarity_value >= similarity_threshold and similarity_value > similar_shelf[1]:
+    #         similar_shelf = (key, similarity_value)
+    # --------------------------------------------------------------------------
 
     if similar[1]:
-        return StepOutput(content={'shelf_path': str(Path(similar[0]).parent), 'embedding': embedding}, success=True)
+        return StepOutput(content={'shelf_path': str(Path(similar[0]).parent), 'embedding': doc_embedding}, success=True)
     else:
-        return StepOutput(content={'embedding': embedding}, success=False)
+        return StepOutput(content={'embedding': doc_embedding}, success=False)

@@ -11,31 +11,35 @@ import json
 
 from agno.workflow import StepInput, StepOutput
 
-from librarian.core.settings import library_path, library_index_file
+from librarian.core.settings import library_path, library_index_file, shelves_index_file
+from librarian.utils.embedding import generate_vector
 
 
-def update_library_index(file_shelf: Path, embedding: str) -> None:
+def update_index(index_file: Path, index: str, embedding: str) -> None:
     """
-    Updates the library index file with the document's vector embedding.
+    Updates a JSON index file with a new embedding for a given index key.
+
+    Reads the existing index from the file, updates or adds the entry
+    for the specified index, and writes the updated dictionary back to the file.
 
     Args:
-        file_shelf (Path): The relative path of the file within the library.
-        embedding (str): The vector embedding representing the document's content.
+        index_file (Path): The path to the JSON index file.
+        index (str): The key representing the shelf or file path to be indexed.
+        embedding (str): The vector embedding to be stored for the index.
     """
+    with open(index_file, 'r', encoding='utf-8') as file:
+        _index = json.load(file)
 
-    with open(library_index_file, 'r', encoding='utf-8') as file:
-        library = json.load(file)
+    _index[index] = embedding
 
-    library[str(file_shelf)] = embedding
-
-    with open(library_index_file, 'w', encoding='utf-8') as file:
-        json.dump(library, file, indent=4, ensure_ascii=False)
+    with open(index_file, 'w', encoding='utf-8') as file:
+        json.dump(_index, file, indent=4, ensure_ascii=False)
 
     return
-
+    
 def send_to_shelf(step_input: StepInput) -> StepOutput:
     """
-    Moves the processed file to the target shelf and updates the library index.
+    Copies the processed file to the target shelf and updates the library index.
 
     Retrieves the designated shelf path from either the semantic similarity step
     or the librarian analysis step. It then copies the file to the new location
@@ -55,10 +59,11 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
     file_name = f'{name}{extension}'
 
     if (step_input.get_step_output(step_name='Semantic-similarity').success == True):
-        shelf_path = Path(step_input.get_step_content('Semantic-similarity')['shelf_path'])
+        shelf_path = step_input.get_step_content('Semantic-similarity')['shelf_path']
     else:
-        shelf_path = Path(step_input.get_step_content('Librarian-analysis').shelf_path)
-
+        shelf_path = step_input.get_step_content('Librarian-analysis').shelf_path
+                                  
+    shelf_path = Path(shelf_path)
     dst = library_path / shelf_path
 
     try:
@@ -67,8 +72,13 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
         # src.rename(dst / file_name)
         src.copy(dst / file_name)
 
-        embedding = step_input.get_step_content('Semantic-similarity')['embedding']
-        update_library_index(file_shelf=shelf_path / file_name, embedding=embedding)
+        # Update index document embedding
+        doc_embedding = step_input.get_step_content('Semantic-similarity')['embedding']
+        update_index(index_file=library_index_file, index=str(shelf_path / file_name), embedding=doc_embedding)
+        
+        # Update index shelf embedding
+        shelf_embedding = generate_vector(prompt=str(shelf_path)).tolist()
+        update_index(index_file=shelves_index_file, index=str(shelf_path), embedding=shelf_embedding)
     except Exception:
         return StepOutput(content='', success=False)
     else:

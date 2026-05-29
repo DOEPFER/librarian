@@ -5,23 +5,33 @@ Loads environment variables and initializes core configuration variables,
 such as paths to the library, system folders, index files, and API keys.
 """
 
-from pathlib import Path
-
 import os
 from dotenv import load_dotenv
+# import tomllib
+from tomlkit import parse, dumps
 
-dotenv_path = Path('librarian') / 'config' / '.env'
+from pathlib import Path
+
+
+# Load environment variables
+dotenv_path = Path('librarian') / '.env'
 load_dotenv(dotenv_path=dotenv_path, override=True)
 
-# Environment
-library_path = Path(os.getenv('LIBRARY_PATH'))
-sys_folder_name = os.getenv('SYS_FOLDER_NAME')
-library_index_file_name = os.getenv('LIBRARY_INDEX_FILE_NAME')
-shelves_index_file_name = os.getenv('SHELVES_INDEX_FILE_NAME')
+# Load config
+with open('librarian/config/config.toml', 'r', encoding='utf-8') as file:
+    content = file.read()
+    config = parse(content)
 
+# Environment
 openai_api_key = os.getenv('OPENAI_API_KEY')
-embedding_model_id = os.getenv('EMBEDDING_MODEL_ID')
-# similarity_threshold = os.getenv('SIMILARITY_THRESHOLD')
+
+# Settings
+library_path = Path(config['settings']['library_path'])
+sys_folder_name = config['settings']['sys_folder_name']
+library_index_file_name = config['settings']['library_index_file_name']
+shelves_index_file_name = config['settings']['shelves_index_file_name']
+embedding_model_id = config['settings']['embedding_model_id']
+similarity_threshold = config['settings']['similarity_threshold']
 
 # Variables
 sys_path = library_path / sys_folder_name
