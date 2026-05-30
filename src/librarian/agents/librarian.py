@@ -28,5 +28,6 @@ librarian = Agent(
     input_schema=LibrarianInput,
     output_schema=LibrarianOutput,
     
-    debug_mode=True
+    # debug_mode=True,
+    # debug_level=1
 )

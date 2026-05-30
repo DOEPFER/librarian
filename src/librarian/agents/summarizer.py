@@ -28,5 +28,6 @@ summarizer = Agent(
     input_schema=SummarizerInput,
     output_schema=SummarizerOutput,
     
-    debug_mode=True
+    # debug_mode=True,
+    # debug_level=1
 )

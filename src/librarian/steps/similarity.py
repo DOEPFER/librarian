@@ -15,7 +15,7 @@ from agno.workflow import StepInput, StepOutput
 from librarian.utils.embedding import generate_vector
 from librarian.utils.cosine_similarity import similarity
 
-from librarian.core.settings import library_index_file, shelves_index_file, similarity_threshold
+from librarian.core.settings import library_index_file, shelves_index_file, similarity_threshold, logger
 
 
 def semantic_similarity(step_input: StepInput) -> StepOutput:
@@ -42,6 +42,7 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     with open(library_index_file, 'r', encoding='utf-8') as file:
         _library = json.load(file)
     
+    logger.info(msg='Checking semantic similarity...')
     similar = ('', 0)   
     for key, value in _library.items():
 

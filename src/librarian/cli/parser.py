@@ -19,5 +19,7 @@ config_subparser = subparsers.add_parser('config')
 config_subparser.add_argument('-l', '--library', help='Set library path', type=str)
 config_subparser.add_argument('-e', '--embedding', help='Set embedding model ID', type=str)
 config_subparser.set_defaults(execute=commands.config)
+config_subparser.add_argument('-p', '--prefix', help='Log file prefix.', type=str, default='librarian')
+config_subparser.add_argument('-v', '--verbose', help='Verbose mode.', action='store_true')
 
 args = parser.parse_args()

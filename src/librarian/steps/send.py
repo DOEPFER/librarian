@@ -11,7 +11,7 @@ import json
 
 from agno.workflow import StepInput, StepOutput
 
-from librarian.core.settings import library_path, library_index_file, shelves_index_file
+from librarian.core.settings import library_path, library_index_file, shelves_index_file, logger
 from librarian.utils.embedding import generate_vector
 
 
@@ -65,6 +65,10 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
                                   
     shelf_path = Path(shelf_path)
     dst = library_path / shelf_path
+
+    logger.info(msg='Moving file to shelf...')
+    logger.info(msg=f'src: {src}')
+    logger.info(msg=f'dst: {dst / file_name}')
 
     try:
         dst.mkdir(parents=True, exist_ok=True)

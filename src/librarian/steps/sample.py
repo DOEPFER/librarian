@@ -9,6 +9,8 @@ from pypdf import PdfReader
 
 from agno.workflow import StepInput, StepOutput
 
+from librarian.core.settings import logger
+
 
 def sample_file(step_input: StepInput) -> StepOutput:
     """
@@ -30,6 +32,7 @@ def sample_file(step_input: StepInput) -> StepOutput:
     
     max_pages = 7
 
+    logger.info(msg='Extracting metadata and text sample...')
     try:
         with open(file_path, 'rb') as file:
             pdf = PdfReader(file)
@@ -62,6 +65,6 @@ def sample_file(step_input: StepInput) -> StepOutput:
                 page = pdf.pages[i]
                 sample += page.extract_text()
     except Exception:
-        return StepOutput(content='', success=False)
+        return StepOutput(content='', success=False, stop=True)
     else:
         return StepOutput(content={'metadata': metadata, 'sample': sample}, success=True)

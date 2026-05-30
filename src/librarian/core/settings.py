@@ -12,6 +12,8 @@ from tomlkit import parse, dumps
 
 from pathlib import Path
 
+from librarian.log import setup_logging
+
 
 # Load environment variables
 dotenv_path = Path('librarian') / '.env'
@@ -37,3 +39,7 @@ similarity_threshold = config['settings']['similarity_threshold']
 sys_path = library_path / sys_folder_name
 library_index_file = sys_path / library_index_file_name
 shelves_index_file = sys_path / shelves_index_file_name
+
+# Log
+# logger = setup_logging(logprefix=args.logprefix, verbose=args.verbose)
+logger = setup_logging(logprefix='librarian', verbose='store_true')

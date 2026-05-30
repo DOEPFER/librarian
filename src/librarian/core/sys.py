@@ -11,6 +11,7 @@ import json
 from librarian.core.settings import sys_path
 from librarian.utils.embedding import generate_vector
 from librarian.utils.shelves_library import get_shelves, get_library
+from librarian.core.settings import logger
 
 
 def create_sys_path(sys_path: Path) -> None:
@@ -47,6 +48,7 @@ def shelf_embeddings(shelves_index_file: Path) -> None:
     # Returns the current shelves
     shelves = get_shelves()
 
+    logger.info(msg='Updating shelves index file...')
     try:
         with open(shelves_index_file, 'r', encoding='utf-8') as file:
             _shelves = json.load(file)
@@ -60,7 +62,7 @@ def shelf_embeddings(shelves_index_file: Path) -> None:
             new_shelves[shelf] = _shelves[shelf]
         else:
             new_shelves[shelf] = generate_vector(prompt=shelf).tolist()
-
+    
     with open(shelves_index_file, 'w', encoding='utf-8') as file:
         json.dump(new_shelves, file, indent=0, ensure_ascii=False)
 
@@ -84,6 +86,7 @@ def library_embeddings(library_index_file: Path) -> None:
     # Returns the current library
     library = get_library()
 
+    logger.info(msg='Updating library index file...')
     try:
         with open(library_index_file, 'r', encoding='utf-8') as file:
             _library = json.load(file)
