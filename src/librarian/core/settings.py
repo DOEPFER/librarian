@@ -32,7 +32,7 @@ library_index_file_name = config["settings"]["library_index_file_name"]
 shelves_index_file_name = config["settings"]["shelves_index_file_name"]
 embedding_model_id = config["settings"]["embedding_model_id"]
 similarity_threshold = config["settings"]["similarity_threshold"]
-shelf_similarity_hreshold = 0.5
+shelf_similarity_hreshold = 0.65
 
 # Variables
 sys_path = library_path / sys_folder_name

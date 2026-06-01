@@ -58,7 +58,8 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
     with the generated file name and updates the index with the document's embedding.
 
     Args:
-        step_input (StepInput): The workflow step input containing outputs from previous steps.
+        step_input (StepInput): The workflow step input containing outputs
+        from previous steps.
 
     Returns:
         StepOutput: The result of the step execution, indicating success or failure.

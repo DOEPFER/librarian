@@ -19,7 +19,10 @@ class SummarizerInput(BaseModel):
         description="Document metadata such as title, author, and subject."
     )
     sample: str = Field(
-        description="A sample of the document content to help the agent understand the document."
+        description="""
+        A sample of the document content to help the agent
+        understand the document.
+        """
     )
 
 

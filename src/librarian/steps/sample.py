@@ -23,8 +23,8 @@ def sample_file(step_input: StepInput) -> StepOutput:
         step_input (StepInput): The workflow step input containing the 'file_path'.
 
     Returns:
-        StepOutput: The result containing the extracted 'metadata' and 'sample' on success,
-        or a failure status if an error occurs.
+        StepOutput: The result containing the extracted 'metadata' and 'sample'
+        on success, or a failure status if an error occurs.
     """
 
     file_path = step_input.input["file_path"]
@@ -46,13 +46,6 @@ def sample_file(step_input: StepInput) -> StepOutput:
                     "author": metadata.author if metadata.author is not None else "",
                     "subject": metadata.subject if metadata.subject is not None else "",
                 }
-
-            # metadata_xmp = pdf.xmp_metadata
-            # metadata_xmp = {
-            #     'title': metadata_xmp.dc_title if metadata_xmp.dc_title is not None else '',
-            #     'author': metadata_xmp.dc_creator if metadata_xmp.dc_creator is not None else '',
-            #     'subject': metadata_xmp.dc_description if metadata_xmp.dc_description is not None else ''
-            # }
 
             total_pages = len(pdf.pages)
 

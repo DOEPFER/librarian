@@ -44,7 +44,8 @@ def prepare_data(step_input: StepInput) -> StepOutput:
         step_input (StepInput): The input object containing data from previous steps.
 
     Returns:
-        StepOutput: An object containing the extracted tags, summary, and shelves on success.
+        StepOutput: An object containing the extracted tags, summary,
+        and shelves on success.
     """
 
     tags = step_input.get_step_content("Summarize-document").tags

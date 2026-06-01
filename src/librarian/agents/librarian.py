@@ -15,12 +15,14 @@ from librarian.core.settings import openai_api_key
 librarian = Agent(
     name="Librarian",
     role="Librarian",
-    # model=Ollama(id='gemma4:e2b', options={'temperature': 0.0}, format='json', keep_alive='15s'),
+    # model=Ollama(
+    #     id="gemma4:e2b", options={"temperature": 0.0}, format="json", keep_alive="15s"
+    # ),
     model=OpenAIChat(id="gpt-5.4-mini", api_key=openai_api_key, temperature=0.0),
     description=DESCRIPTION,
     instructions=INSTRUCTIONS,
     input_schema=LibrarianInput,
     output_schema=LibrarianOutput,
-    # debug_mode=True,
-    # debug_level=1
+    debug_mode=True,
+    debug_level=1,
 )

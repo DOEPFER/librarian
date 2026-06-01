@@ -29,10 +29,12 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     a predefined similarity threshold.
 
     Args:
-        step_input (StepInput): The workflow step input containing the previous step's output (tags and summary).
+        step_input (StepInput): The workflow step input containing the previous step's
+        output (tags and summary).
 
     Returns:
-        StepOutput: The result containing the generated embedding and, if a match is found, the suggested shelf path.
+        StepOutput: The result containing the generated embedding and,
+        if a match is found, the suggested shelf path.
     """
 
     tags = step_input.previous_step_content.tags
@@ -57,14 +59,16 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     # tags_str_embedding = str(Path(*tags))
     # tags_embedding = generate_vector(prompt=tags_str_embedding)
 
-    # with open(shelves_index_file, 'r', encoding='utf-8') as file:
+    # with open(shelves_index_file, "r", encoding="utf-8") as file:
     #     _shelves = json.load(file)
 
-    # similar_shelf = ('', 0)
+    # similar_shelf = ("", 0)
     # for key, value in _shelves.items():
-
     #     similarity_value = similarity(np.array(value), np.array(tags_embedding))
-    #     if similarity_value >= similarity_threshold and similarity_value > similar_shelf[1]:
+    #     if (
+    #         similarity_value >= similarity_threshold
+    #         and similarity_value > similar_shelf[1]
+    #     ):
     #         similar_shelf = (key, similarity_value)
     # --------------------------------------------------------------------------
 

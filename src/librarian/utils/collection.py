@@ -38,10 +38,12 @@ def select_collection(collection_path: Path) -> List[Path]:
     by checking their file signature (magic bytes).
 
     Args:
-        collection_path (Path): The path to a single file or a directory containing files.
+        collection_path (Path): The path to a single file or a directory
+        containing files.
 
     Returns:
-        List[Path]: A list of file paths that are valid PDFs and not currently in the library.
+        List[Path]: A list of file paths that are valid PDFs and not currently
+        in the library.
     """
 
     content_library = library_path.glob(pattern="**/*")

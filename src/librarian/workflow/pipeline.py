@@ -24,8 +24,10 @@ step_0 = Step(
 
 step_1 = Step(
     name="Sample-file",
-    description="Extract a sample of the document content to help the agent"
-    "understand the document.",
+    description="""
+    Extract a sample of the document content
+    to help the agent understand the document.
+    """,
     executor=sample_file,
 )
 
@@ -37,8 +39,10 @@ step_2 = Step(
 
 step_3 = Step(
     name="Semantic-similarity",
-    description="Check the semantic similarity with other files and,"
-    " if a match is found, move it to the same folder (shelf).",
+    description="""
+    Check the semantic similarity with other files and, if a match is found,
+    move it to the same folder (shelf).
+    """,
     executor=semantic_similarity,
 )
 
