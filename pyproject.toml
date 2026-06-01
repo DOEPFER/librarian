@@ -10,4 +10,31 @@ dependencies = [
     "openai>=2.38.0",
     "pypdf>=6.12.1",
     "scikit-learn>=1.8.0",
+    "tomlkit>=0.15.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314" # Ajuste para a versão que estiver utilizando
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B"]
+ignore = []
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.mypy]
+python_version = "3.14"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+follow_imports = "silent"
+# Descomente a linha abaixo no futuro se quiser tipagem 100% estrita
+# strict = true
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "ruff>=0.15.15",
 ]
