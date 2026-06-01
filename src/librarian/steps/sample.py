@@ -5,9 +5,8 @@ This module provides functionality to extract metadata and a text sample
 from a PDF document to be used in subsequent analysis steps.
 """
 
-from pypdf import PdfReader
-
 from agno.workflow import StepInput, StepOutput
+from pypdf import PdfReader
 
 from librarian.core.settings import logger
 
@@ -28,24 +27,24 @@ def sample_file(step_input: StepInput) -> StepOutput:
         or a failure status if an error occurs.
     """
 
-    file_path = step_input.input['file_path']
-    
+    file_path = step_input.input["file_path"]
+
     max_pages = 7
 
-    logger.info(msg='Extracting metadata and text sample...')
+    logger.info(msg="Extracting metadata and text sample...")
     try:
-        with open(file_path, 'rb') as file:
+        with open(file_path, "rb") as file:
             pdf = PdfReader(file)
 
             # metadata
             metadata = pdf.metadata
             if metadata is None:
-                metadata = {'title': '', 'author': '', 'subject': ''}
-            else:       
-                metadata = {
-                    'title': metadata.title if metadata.title is not None else '',
-                    'author': metadata.author if metadata.author is not None else '',
-                    'subject': metadata.subject if metadata.subject is not None else ''
+                metadata_values = {"title": "", "author": "", "subject": ""}
+            else:
+                metadata_values = {
+                    "title": metadata.title if metadata.title is not None else "",
+                    "author": metadata.author if metadata.author is not None else "",
+                    "subject": metadata.subject if metadata.subject is not None else "",
                 }
 
             # metadata_xmp = pdf.xmp_metadata
@@ -54,17 +53,19 @@ def sample_file(step_input: StepInput) -> StepOutput:
             #     'author': metadata_xmp.dc_creator if metadata_xmp.dc_creator is not None else '',
             #     'subject': metadata_xmp.dc_description if metadata_xmp.dc_description is not None else ''
             # }
-            
+
             total_pages = len(pdf.pages)
 
             max_pages = min(max_pages, total_pages)
-            
+
             # sample
-            sample = ''
+            sample = ""
             for i in range(max_pages):
                 page = pdf.pages[i]
                 sample += page.extract_text()
     except Exception:
-        return StepOutput(content='', success=False, stop=True)
+        return StepOutput(content="", success=False, stop=True)
     else:
-        return StepOutput(content={'metadata': metadata, 'sample': sample}, success=True)
+        return StepOutput(
+            content={"metadata": metadata_values, "sample": sample}, success=True
+        )

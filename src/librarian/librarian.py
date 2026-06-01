@@ -7,5 +7,4 @@ the execution module with a specified collection path.
 
 from librarian.cli.parser import args
 
-
 args.execute(args)

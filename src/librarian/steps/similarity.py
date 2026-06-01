@@ -5,17 +5,19 @@ This module evaluates the semantic similarity of a new document against
 the existing library index to suggest an appropriate shelf path.
 """
 
-from pathlib import Path
 import json
+from pathlib import Path
 
 import numpy as np
-
 from agno.workflow import StepInput, StepOutput
 
-from librarian.utils.embedding import generate_vector
+from librarian.core.settings import (
+    library_index_file,
+    logger,
+    similarity_threshold,
+)
 from librarian.utils.cosine_similarity import similarity
-
-from librarian.core.settings import library_index_file, shelves_index_file, similarity_threshold, logger
+from librarian.utils.embedding import generate_vector
 
 
 def semantic_similarity(step_input: StepInput) -> StepOutput:
@@ -36,20 +38,19 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     tags = step_input.previous_step_content.tags
     summary = step_input.previous_step_content.summary
 
-    doc_str_embedding = f'<tags>{tags}</tags><summary>{summary}</summary>'
+    doc_str_embedding = f"<tags>{tags}</tags><summary>{summary}</summary>"
     doc_embedding = generate_vector(prompt=doc_str_embedding)
 
-    with open(library_index_file, 'r', encoding='utf-8') as file:
+    with open(library_index_file, "r", encoding="utf-8") as file:
         _library = json.load(file)
-    
-    logger.info(msg='Checking semantic similarity...')
-    similar = ('', 0)   
-    for key, value in _library.items():
 
+    logger.info(msg="Checking semantic similarity...")
+    similar = ("", 0)
+    for key, value in _library.items():
         similarity_value = similarity(np.array(value), np.array(doc_embedding))
         if similarity_value >= similarity_threshold and similarity_value > similar[1]:
             similar = (key, similarity_value)
-    
+
     doc_embedding = doc_embedding.tolist()
 
     # --------------------------------------------------------------------------
@@ -58,8 +59,8 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
 
     # with open(shelves_index_file, 'r', encoding='utf-8') as file:
     #     _shelves = json.load(file)
-    
-    # similar_shelf = ('', 0)   
+
+    # similar_shelf = ('', 0)
     # for key, value in _shelves.items():
 
     #     similarity_value = similarity(np.array(value), np.array(tags_embedding))
@@ -68,6 +69,12 @@ def semantic_similarity(step_input: StepInput) -> StepOutput:
     # --------------------------------------------------------------------------
 
     if similar[1]:
-        return StepOutput(content={'shelf_path': str(Path(similar[0]).parent), 'embedding': doc_embedding}, success=True)
+        return StepOutput(
+            content={
+                "shelf_path": str(Path(similar[0]).parent),
+                "embedding": doc_embedding,
+            },
+            success=True,
+        )
     else:
-        return StepOutput(content={'embedding': doc_embedding}, success=False)
+        return StepOutput(content={"embedding": doc_embedding}, success=False)

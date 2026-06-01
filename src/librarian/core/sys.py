@@ -5,13 +5,12 @@ This module handles the creation of system directories and the generation
 of vector embeddings for both the library shelves and the library documents.
 """
 
-from pathlib import Path
 import json
+from pathlib import Path
 
-from librarian.core.settings import sys_path
+from librarian.core.settings import logger, sys_path
 from librarian.utils.embedding import generate_vector
-from librarian.utils.shelves_library import get_shelves, get_library
-from librarian.core.settings import logger
+from librarian.utils.shelves_library import get_library, get_shelves
 
 
 def create_sys_path(sys_path: Path) -> None:
@@ -25,9 +24,11 @@ def create_sys_path(sys_path: Path) -> None:
     try:
         sys_path.mkdir(parents=True, exist_ok=True)
     except Exception:
-        pass
+        logger.error(msg="Error creating system directory.")
+        return
 
     return
+
 
 def shelf_embeddings(shelves_index_file: Path) -> None:
     """
@@ -42,17 +43,14 @@ def shelf_embeddings(shelves_index_file: Path) -> None:
 
     create_sys_path(sys_path=sys_path)
 
-    # if not shelves_index_file.exists():
-    #     shelves_index_file.write_text('{}', encoding='utf-8')
-
     # Returns the current shelves
     shelves = get_shelves()
 
-    logger.info(msg='Updating shelves index file...')
+    logger.info(msg="Updating shelves index file...")
     try:
-        with open(shelves_index_file, 'r', encoding='utf-8') as file:
+        with open(shelves_index_file, "r", encoding="utf-8") as file:
             _shelves = json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError, json.JSONDecodeError:
         _shelves = {}
 
     # Rebuilds the index file
@@ -62,9 +60,18 @@ def shelf_embeddings(shelves_index_file: Path) -> None:
             new_shelves[shelf] = _shelves[shelf]
         else:
             new_shelves[shelf] = generate_vector(prompt=shelf).tolist()
-    
-    with open(shelves_index_file, 'w', encoding='utf-8') as file:
-        json.dump(new_shelves, file, indent=0, ensure_ascii=False)
+
+    try:
+        with open(shelves_index_file, "w", encoding="utf-8") as file:
+            json.dump(new_shelves, file, indent=0, ensure_ascii=False)
+    except Exception:
+        logger.error(msg="Error updating shelves index file.")
+        return
+    else:
+        logger.info(msg="Shelves index file updated.")
+
+    return
+
 
 def library_embeddings(library_index_file: Path) -> None:
     """
@@ -80,17 +87,14 @@ def library_embeddings(library_index_file: Path) -> None:
 
     create_sys_path(sys_path=sys_path)
 
-    # if not library_index_file.exists():
-    #     library_index_file.write_text('{}', encoding='utf-8')
-
     # Returns the current library
     library = get_library()
 
-    logger.info(msg='Updating library index file...')
+    logger.info(msg="Updating library index file...")
     try:
-        with open(library_index_file, 'r', encoding='utf-8') as file:
+        with open(library_index_file, "r", encoding="utf-8") as file:
             _library = json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
+    except FileNotFoundError, json.JSONDecodeError:
         _library = {}
 
     # Rebuilds the index file
@@ -104,6 +108,13 @@ def library_embeddings(library_index_file: Path) -> None:
             # new_library[doc] = generate_vector(prompt=doc).tolist()
             # um agente deve ser chamado para resumir e gerar um embedding
             # sugerir caminho novo?
+    try:
+        with open(library_index_file, "w", encoding="utf-8") as file:
+            json.dump(new_library, file, indent=4, ensure_ascii=False)
+    except Exception:
+        logger.error(msg="Error updating library index file.")
+        return
+    else:
+        logger.info(msg="Library index file updated.")
 
-    with open(library_index_file, 'w', encoding='utf-8') as file:
-        json.dump(new_library, file, indent=4, ensure_ascii=False)
+    return
