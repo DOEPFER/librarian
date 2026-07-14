@@ -18,6 +18,7 @@ from librarian.core.settings import (
     shelves_index_file,
 )
 from librarian.utils.embedding import generate_vector
+from librarian.utils.hash import generate_hash
 
 
 def update_index(index_file: Path, index: str, embedding: str) -> None:
@@ -32,24 +33,28 @@ def update_index(index_file: Path, index: str, embedding: str) -> None:
         index (str): The key representing the shelf or file path to be indexed.
         embedding (str): The vector embedding to be stored for the index.
     """
-    with open(index_file, "r", encoding="utf-8") as file:
-        _index = json.load(file)
-
-    _index[index] = embedding
-
     try:
-        with open(index_file, "w", encoding="utf-8") as file:
-            json.dump(_index, file, indent=4, ensure_ascii=False)
+        with open(index_file, "r", encoding="utf-8") as file:
+            _index = json.load(file)
+
+        _index[index] = embedding
     except Exception:
-        logger.error(msg="Error updating index file.")
+        logger.error(msg="Error reading index file.")
         return
     else:
-        logger.info(msg="Index file updated.")
+        try:
+            with open(index_file, "w", encoding="utf-8") as file:
+                json.dump(_index, file, indent=4, ensure_ascii=False)
+        except Exception:
+            logger.error(msg="Error updating index file.")
+            return
+        else:
+            logger.info(msg="Index file updated.")
 
     return
 
 
-def send_to_shelf(step_input: StepInput) -> StepOutput:
+def to_shelf(step_input: StepInput) -> StepOutput:
     """
     Copies the processed file to the target shelf and updates the library index.
 
@@ -66,6 +71,7 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
     """
 
     src = step_input.input["file_path"]
+    move = step_input.input.get("move", False)
 
     name = step_input.get_step_content("Summarize-document").name
     extension = src.suffix.lower()
@@ -86,8 +92,18 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
     try:
         dst.mkdir(parents=True, exist_ok=True)
 
-        # src.rename(dst / file_name)
-        src.copy(dst / file_name)
+        temporary = (dst / file_name).with_suffix(extension + ".tmp")
+        src.copy(temporary)
+
+        if generate_hash(src) == generate_hash(temporary):
+            temporary.replace(dst / file_name)
+
+            if move:
+                src.unlink()
+
+        else:
+            temporary.unlink()
+            return StepOutput(content="", success=False, stop=True)
 
         # Update index document embedding
         doc_embedding = step_input.get_step_content("Semantic-similarity")["embedding"]
@@ -105,6 +121,6 @@ def send_to_shelf(step_input: StepInput) -> StepOutput:
             embedding=shelf_embedding,
         )
     except Exception:
-        return StepOutput(content="", success=False)
+        return StepOutput(content="", success=False, stop=True)
     else:
         return StepOutput(content="", success=True)

@@ -13,7 +13,9 @@
 - **Formato:** As tags devem ser retornadas como uma lista em formato string, **em inglês**, separadas por **vírgula e um espaço**. Use **hífen ("-")** em vez de espaços.
 ## Exemplos:
 - "tags": ["python", "finance", "pandas", "backtesting", "machine-learning"]
+- "tags": ["mathematics", "linear-algebra", "analytical-geometry"]
 - "tags": ["biology", "genetics", "dna", "rna"]
+- "tags": ["mathematics", "statistics", "probability", "python", "data-science"]
 
 # 3. Resumo
 - Crie um resumo objetivo com base na amostra "{sample}" que recebeu.

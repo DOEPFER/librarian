@@ -14,7 +14,7 @@ from librarian.agents.summarizer import summarizer
 from librarian.steps.index import update_index
 from librarian.steps.librarian import prepare_data
 from librarian.steps.sample import sample_file
-from librarian.steps.send import send_to_shelf
+from librarian.steps.send import to_shelf
 from librarian.steps.similarity import semantic_similarity
 
 # STEPS
@@ -61,7 +61,7 @@ step_5 = Step(
 step_6 = Step(
     name="Send-to-shelf",
     description="Send the analyzed file to the appropriate folder (shelf).",
-    executor=send_to_shelf,
+    executor=to_shelf,
 )
 
 # WORKFLOW

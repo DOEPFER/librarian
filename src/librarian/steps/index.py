@@ -8,7 +8,7 @@ embeddings index for both shelves and documents.
 from agno.workflow import StepInput, StepOutput
 
 from librarian.core.settings import library_index_file, shelves_index_file
-from librarian.core.sys import library_embeddings, shelf_embeddings
+from librarian.core.system import library_embeddings, shelf_embeddings
 
 
 def update_index(step_input: StepInput) -> StepOutput:
@@ -21,8 +21,10 @@ def update_index(step_input: StepInput) -> StepOutput:
     Returns:
         StepOutput: The result of the step execution, indicating success.
     """
-
-    shelf_embeddings(shelves_index_file=shelves_index_file)
-    library_embeddings(library_index_file=library_index_file)
-
-    return StepOutput(content="", success=True)
+    try:
+        shelf_embeddings(shelves_index_file=shelves_index_file)
+        library_embeddings(library_index_file=library_index_file)
+    except Exception:
+        return StepOutput(content="", success=False, stop=True)
+    else:
+        return StepOutput(content="", success=True)

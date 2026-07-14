@@ -5,28 +5,11 @@ This module provides functions to calculate file checksums and filter
 incoming collections of documents, avoiding duplicates and invalid formats.
 """
 
-import hashlib
 from pathlib import Path
 from typing import List
 
 from librarian.core.settings import library_path
-
-
-def checksum(file: Path) -> str:
-    """
-    Computes the MD5 checksum of a file.
-
-    Args:
-        file (Path): The path to the file.
-
-    Returns:
-        str: The MD5 checksum as a hexadecimal string.
-    """
-    md5_hash = hashlib.md5()
-    with open(file, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            md5_hash.update(chunk)
-    return md5_hash.hexdigest()
+from librarian.utils.hash import generate_hash
 
 
 def select_collection(collection_path: Path) -> List[Path]:
@@ -48,19 +31,19 @@ def select_collection(collection_path: Path) -> List[Path]:
 
     content_library = library_path.glob(pattern="**/*")
     content_library = [
-        checksum(content) for content in content_library if content.is_file()
+        generate_hash(content) for content in content_library if content.is_file()
     ]
 
     if collection_path.is_file():
         new_files_to_add = (
             [collection_path]
-            if checksum(collection_path) not in content_library
+            if generate_hash(collection_path) not in content_library
             else []
         )
     else:
         content_collection = collection_path.glob(pattern="**/*")
         files_by_checksum = {
-            checksum(content): content
+            generate_hash(content): content
             for content in content_collection
             if content.is_file()
         }

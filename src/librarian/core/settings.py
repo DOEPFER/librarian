@@ -32,7 +32,8 @@ library_index_file_name = config["settings"]["library_index_file_name"]
 shelves_index_file_name = config["settings"]["shelves_index_file_name"]
 embedding_model_id = config["settings"]["embedding_model_id"]
 similarity_threshold = config["settings"]["similarity_threshold"]
-shelf_similarity_hreshold = 0.65
+shelf_similarity_threshold = config["settings"]["shelf_similarity_threshold"]
+logprefix = config["settings"]["logprefix"]
 
 # Variables
 sys_path = library_path / sys_folder_name
@@ -40,5 +41,4 @@ library_index_file = sys_path / library_index_file_name
 shelves_index_file = sys_path / shelves_index_file_name
 
 # Log
-# logger = setup_logging(logprefix=args.logprefix, verbose=args.verbose)
-logger = setup_logging(logprefix="librarian", verbose="store_true")
+logger = setup_logging(logprefix=logprefix, verbose=False)

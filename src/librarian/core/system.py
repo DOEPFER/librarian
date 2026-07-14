@@ -13,7 +13,7 @@ from librarian.utils.embedding import generate_vector
 from librarian.utils.shelves_library import get_library, get_shelves
 
 
-def create_sys_path(sys_path: Path) -> None:
+def create_sys_path(sys_path: Path) -> bool:
     """
     Creates the system directory if it does not exist.
 
@@ -25,9 +25,10 @@ def create_sys_path(sys_path: Path) -> None:
         sys_path.mkdir(parents=True, exist_ok=True)
     except Exception:
         logger.error(msg="Error creating system directory.")
-        return
-
-    return
+        return False
+    else:
+        logger.info(msg="System directory created.")
+        return True
 
 
 def shelf_embeddings(shelves_index_file: Path) -> None:

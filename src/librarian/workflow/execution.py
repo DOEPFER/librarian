@@ -6,12 +6,13 @@ pipeline (DAG) over a given collection of files or a single file.
 """
 
 from pathlib import Path
+from typing import Any
 
 from librarian.utils.collection import select_collection
 from librarian.workflow.pipeline import dag
 
 
-def workflow_run(collection_path: Path) -> None:
+def workflow_run(collection_path: Path, **kwargs: dict[str, Any]) -> None:
     """
     Executes the workflow pipeline for a collection of files.
 
@@ -25,4 +26,4 @@ def workflow_run(collection_path: Path) -> None:
     collection = select_collection(collection_path=collection_path)
 
     for file_path in collection:
-        dag.run(input={"file_path": file_path})
+        dag.run(input={"file_path": file_path, "move": kwargs.get("move", False)})

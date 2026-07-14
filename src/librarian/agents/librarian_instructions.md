@@ -5,17 +5,12 @@
 - **Profundidade:** Máximo de **3 níveis** na hierarquia de pastas, separadas por barra ("/").
 - **Formatação:** Utilize **hífen ("-")** em vez de espaços caso uma pasta individual utilize mais de uma palavra para definir o assunto/tema/subtema/tópico.
 - **Idioma:** Escreva todas as pastas e subpastas **em inglês**, independentemente do idioma do conteúdo do arquivo.
+- Você deve sugerir apenas 1 (um), shelf_path.
 ## Exemplos:
 - "shelf_path": "time-series/machine-learning"
 - "shelf_path": "data-science/python/pandas"
 - "shelf_path": "data-science/python/numpy"
 - "shelf_path": "data-science/python/matplotlib"
-- "shelf_path": "data-science/python/scikit-learn"
-- "shelf_path": "data-science/python/tensorflow"
-- "shelf_path": "data-science/python/pytorch"
-- "shelf_path": "data-science/python/keras"
-- "shelf_path": "data-science/python/statsmodels"
-- "shelf_path": "data-science/python/nltk"
-- "shelf_path": "data-science/python/spacy"
-- "shelf_path": "data-science/python/gensim"
-- "shelf_path": "data-science/python/xgboost"
+- "shelf_path": "biology/genetics"
+- "shelf_path": "mathematics/linear-algebra"
+- "shelf_path": "mathematics/statistics"
